@@ -21,36 +21,68 @@
  */
 var addTwoNumbers = function (l1, l2) {
 
-    var linkToNum = function (link) {
-        var rs = 0;
-        var p = link;
-        var base = 1;
-        while (p) {
-            rs += base * p.val;
-            p = p.next;
-            base *= 10;
+    // 进位
+    var c = 0;
+    var root = null;
+    var parent = root;
+    var p = l1, q = l2;
+    var sum, curNode;
+    while (p && q) {
+        sum = p.val + q.val + c;
+        c = Math.floor(sum / 10);
+        curNode = new ListNode(sum % 10);
+        if (parent) {
+            parent.next = curNode;
         }
-        return rs;
-    };
-    var numToLink = function (num) {
-        var root = null;
-        var parent = root;
-        do {
-            var curVal = num % 10;
-            var curNode = new ListNode(curVal);
-            if (parent) {
-                parent.next = curNode;
-            } 
-            else {
-                root = curNode;
-            }
-            parent = curNode;
-            num = parseInt(num / 10);
-        } while (num !== 0);
-        return root;
-    };
+        else {
+            root = curNode;
+        }
+        parent = curNode;
+        p = p.next;
+        q = q.next;
+    }
 
-    var num1 = linkToNum(l1);
-    var num2 = linkToNum(l2);
-    return numToLink(num1 + num2);
+    while (p) {
+        sum = p.val + c;
+        c = Math.floor(sum / 10);
+        curNode = new ListNode(sum % 10);
+        if (parent) {
+            parent.next = curNode;
+        }
+        else {
+            root = curNode;
+        }
+        parent = curNode;
+        p = p.next;
+    }
+
+
+    while (q) {
+        sum = q.val + c;
+        c = Math.floor(sum / 10);
+        curNode = new ListNode(sum % 10);
+        if (parent) {
+            parent.next = curNode;
+        }
+        else {
+            root = curNode;
+        }
+        parent = curNode;
+        q = q.next;
+    }
+
+    if (c > 0) {
+        sum = c;
+        curNode = new ListNode(sum % 10);
+        if (parent) {
+            parent.next = curNode;
+        }
+        else {
+            root = curNode;
+        }
+        parent = curNode;
+    }
+
+    return root;
+
 };
